@@ -425,4 +425,31 @@ else
     
 end
 
+buff = []
+offset = 0;
+diff_fase = 0;
+for i = 1:length(fase_c)
+    offset = 0;
+   if i > 17
+       buff(17) = fase_c(i);
+      for j = 0:15
+          k = i - j;
+          diff_fase = fase_c(k) - fase_c(k-1);
+          if diff_fase > pi
+              offset = offset + 2*pi;
+          elseif diff_fase < -pi
+              offset = offset - 2*pi;
+          end
+          buff(17-j-1) = fase_c(k-1) + offset;
+      end
+      fase_filt(i) = sum(buff) / 17;
+      buff
+   end
+end
+
+figure;
+plot(mod(fase_filt,pi),'-o');
+hold on
+plot(mod(fase_c,pi),'-o');
+
 toc

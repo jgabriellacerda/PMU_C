@@ -55,6 +55,7 @@ Fasor.o DFT.o FiltroSG.o Frequencia.o FiltroIIR.o Decimacao.o
 #include "Frequencia.c"
 #include "FiltroIIR.c"
 #include "Decimacao.c"
+#include "FiltroMediaMovel.c"
 
 
 #endif

@@ -44,9 +44,9 @@ int main ()
     
     ofstream fase("Matlab/SinaisFaseMagCM/fase_cm_PSD0.txt");
     ofstream mag("Matlab/SinaisFaseMagCM/mag_cm_PSD0.txt");
-    ofstream freq("freq.txt");
+    //ofstream freq("freq.txt");
 
-    ofstream sig_iir_teste("sig_iir_teste.txt");
+    //ofstream sig_iir_teste("sig_iir_teste.txt");
     ofstream fase_teste("Matlab/SinaisFaseMagC/fase_c_FRD0.txt");
     ofstream mag_teste("Matlab/SinaisFaseMagC/mag_c_FRD0.txt");
     ofstream freq_teste("Matlab/SinaisFrequencia/freq_c_FRD0.txt");
@@ -158,8 +158,8 @@ int main ()
         {
             preparaReporte(&FasorTeste);
 
-            sig_iir_teste << std::fixed << std::setprecision(12) << FasorTeste.iir.out_IIR << ";" << endl;
-            fase_teste << std::fixed << std::setprecision(12) << FasorTeste.fase_rep << ";" << endl;
+            //sig_iir_teste << std::fixed << std::setprecision(12) << FasorTeste.iir.out_IIR << ";" << endl;
+            fase_teste << std::fixed << std::setprecision(12) << FasorTeste.fase_corr << ";" << endl;
             mag_teste << std::fixed << std::setprecision(12) << FasorTeste.magnitude << ";" << endl;
             freq_teste << std::fixed << std::setprecision(12) << FasorTeste.frequencia << ";" << endl;
 
@@ -168,7 +168,7 @@ int main ()
                 fase_rep << FasorTeste.timestamp << ";";
                 fase_rep << std::fixed << std::setprecision(12) << FasorTeste.fase_rep << ";" << endl;
                 mag_rep << FasorTeste.timestamp << ";";
-                mag_rep << std::fixed << std::setprecision(12) << FasorTeste.magnitude << ";" << endl;
+                mag_rep << std::fixed << std::setprecision(12) << FasorTeste.mag_rep << ";" << endl;
             }
         }
 
@@ -200,9 +200,9 @@ int main ()
     */
 
     fase.close();
-    freq.close();
+    //freq.close();
 
-    sig_iir_teste.close();
+    //sig_iir_teste.close();
     fase_teste.close();
     freq_teste.close();
 

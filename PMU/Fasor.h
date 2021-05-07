@@ -14,10 +14,12 @@
 #include "Decimacao.h"
 #endif
 
+#include "FiltroMediaMovel.h"
+
 struct Fasor
 {
-    double fase, fase_rep;
-    double magnitude, mag_rep;
+    double fase, fase_rep, fase_mm, fase_corr;
+    double magnitude, mag_rep, mag_mm;
     double frequencia = 0;
     int timestamp = 0;
     int frame_num = 0;
@@ -29,6 +31,8 @@ struct Fasor
     Decimador decim_sinal;
     Decimador decim_fase;
     Decimador decim_mag;
+    FMM fmm_fase;
+    FMM fmm_mag;
 
 
     //SG sg1;

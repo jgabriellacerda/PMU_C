@@ -1,0 +1,92 @@
+#ifndef FMM_C
+#define FMM_C
+
+#include "FiltroMediaMovel.h"
+
+
+double calculaMediaMovel(FMM *fmm, double amostra, int N, bool unwrap)
+{
+    double buff_unwrap[N_MM_MAX];
+    double offset = 0;
+    static const double pi = 3.141592653589793;
+    static const double dois_pi = 6.283185307179586;
+    double diff = 0;
+    double soma = 0;
+    int k = 0;
+    int k1 = 0;
+
+    if (N < 1 || N > N_MM_MAX)
+    {
+        return 0;
+    }
+
+    if(unwrap)
+    {
+        fmm->k0 = (fmm->k0 + 1) % N_MM_MAX;
+        fmm->buffMM[fmm->k0] = amostra;
+
+        buff_unwrap[fmm->k0] = fmm->buffMM[fmm->k0];
+        for(int i = 0; i < N_MM_MAX-1; i++)
+        {
+            k = fmm->k0 - i;
+            if(k < 0)
+            {
+                k += N_MM_MAX;
+            }
+            k1 = k - 1;
+            if(k1 < 0)
+            {
+                k1 += N_MM_MAX;
+            }
+
+            diff = fmm->buffMM[k] - fmm->buffMM[k1];
+            if(diff > pi)
+            {
+                offset += dois_pi;
+            }
+            else if(diff < -pi)
+            {
+                offset -= dois_pi;
+            }
+            buff_unwrap[k1] = fmm->buffMM[k1] + offset;
+        }
+        for(int i = 0; i < N; i++ )
+        {
+            k = fmm->k0 - i;
+            if(k < 0)
+            {
+                k += N_MM_MAX;
+            }
+            soma += buff_unwrap[k];
+            // soma += fmm->buffMM[k];
+        }
+        fmm->y1 = soma / N;
+
+        // if(fmm->y1 > pi)
+        // {
+        //     fmm->y1 -= dois_pi;
+        // }
+        // else if(fmm->y1 < -pi)
+        // {
+        //     fmm->y1 += dois_pi;
+        // }
+    }
+    else
+    {
+        fmm->pos_sub = fmm->k0 - N + 1;
+        if(fmm->pos_sub < 0)
+        {
+            fmm->pos_sub += N_MM_MAX;
+        }
+
+        fmm->y1 = fmm->y0 + (amostra - fmm->buffMM[fmm->pos_sub]) / N;
+        fmm->k0 = (fmm->k0 + 1) % N_MM_MAX;
+        fmm->buffMM[fmm->k0] = amostra;
+        fmm->y0 = fmm->y1;
+    }
+
+    return fmm->y1;
+}
+
+
+#endif
