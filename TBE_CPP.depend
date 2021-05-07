@@ -1,0 +1,41 @@
+# depslib dependency file v1.0
+1559824675 source:c:\users\leandro manso\desktop\implementacaov0\tbe_cpp\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<math.h>
+
+1579549556 source:f:\estudo\ic\detetor (c++)\alterações\implementacaov0\tbe_cpp\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<math.h>
+	<bits/stdc++.h>
+
+1579609832 source:e:\estudo\ic\detetor (c++)\alterações\implementacaov0\tbe_cpp\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<math.h>
+	<bits/stdc++.h>
+
+1578926791 source:c:\users\fab\desktop\detetor (c++)\alterações\implementacaov0\tbe_cpp\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<math.h>
+
+1579730389 source:c:\users\fabrício\desktop\detetor (c++)\alterações\implementacaov0\tbe_cpp\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<math.h>
+	<bits/stdc++.h>
+
+1580220574 source:c:\users\fabrício\desktop\pastas\ic\detetor (c++)\alterações\implementacaov0\tbe_cpp\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<math.h>
+	<bits/stdc++.h>
+
