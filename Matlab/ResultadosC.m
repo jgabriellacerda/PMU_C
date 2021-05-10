@@ -443,12 +443,42 @@ for i = 1:length(fase_c)
           buff(17-j-1) = fase_c(k-1) + offset;
       end
       fase_filt(i) = sum(buff) / 17;
-      buff
+%       buff
+   end
+end
+
+buff = zeros([1 17]);
+buff_unwrap = zeros([1 17]);
+offset = 0;
+diff_fase = 0;
+cont_unwrap = 0;
+for i = 1:length(fase_c)
+   if i > 17
+       buff = fase_c(i-17+1:i);
+      diff_fase = buff(17) - buff(16);
+      if diff_fase > pi
+          cont_unwrap = 0;
+          offset = offset + 2*pi;
+      elseif diff_fase < -pi
+          cont_unwrap = 0;
+          offset = offset - 2*pi;
+      else
+         cont_unwrap = cont_unwrap + 1; 
+      end
+      buff_unwrap(1:16) = buff_unwrap(2:17);
+      buff_unwrap(17) = fase_c(i) - offset;
+      
+      if cont_unwrap > 17
+          offset = 0;
+          buff_unwrap = buff;
+      end
+
+      fase_filt2(i) = sum(buff_unwrap) / 17;
    end
 end
 
 figure;
-plot(mod(fase_filt,pi),'-o');
+plot(mod(fase_filt2,pi),'-o');
 hold on
 plot(mod(fase_c,pi),'-o');
 

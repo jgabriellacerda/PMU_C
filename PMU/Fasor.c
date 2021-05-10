@@ -30,7 +30,7 @@ void preparaReporte(Fasor *fasor)
 
     fasor->fase_corr = fasor->fase - corr;
 
-    fasor->fase_mm = calculaMediaMovel(&fasor->fmm_fase, fasor->fase_corr, 17, false);
+    fasor->fase_mm = calculaMediaMovel(&fasor->fmm_fase, fasor->fase_corr, 17, true);
     fasor->mag_mm = calculaMediaMovel(&fasor->fmm_mag, fasor->magnitude, 17, false);
 
     downsample(&fasor->decim_fase, fasor->fase_mm, 2+8);
@@ -40,6 +40,7 @@ void preparaReporte(Fasor *fasor)
     {
         fasor->fase_rep = fasor->decim_fase.amostra_decim;
         fasor->mag_rep = fasor->decim_mag.amostra_decim;
+        
         fasor->frame_num = (fasor->decim_fase.cont_decim - 6) % 60;
         fasor->second = (fasor->decim_fase.cont_decim - 6) / 60;
         fasor->timestamp = fasor->frame_num + fasor->second*60;
