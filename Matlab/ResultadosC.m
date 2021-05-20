@@ -2,6 +2,8 @@ clear all
 close all
 clc 
 
+opengl hardware
+
 tic
 
 %% Parametros
@@ -207,8 +209,17 @@ f = f(1:length(fase_c));
 
 delay_N = (N+1)/2;
 
-[freq_cm,legs,delay_SG] = FreqSG(unwrap(fase_c),fs);
-corr_cm = (coef_a*(-freq_cm(1,1:length(fase_c)))' + coef_b);
+file = sprintf('SinaisFrequencia/freq_c_%s0.txt',sTest);
+freq_c = load(file);
+freq_c_fmmf = freq_c(:,2)';
+freq_c = freq_c(:,1);
+
+delay_SG = floor(17/2)+1;
+
+freq_c_fmmf = -freq_c_fmmf(delay_SG+delay_N+8:end);
+
+% [freq_c,legs,delay_SG] = FreqSG(unwrap(fase_c),fs);
+corr_cm = (coef_a*(-freq_c(1:length(fase_c)))' + coef_b);
 
 [freq_matlab,legs,delay_SG_dec] = FreqSG(unwrap(fase_matlab),960);
 corr_matlab = (coef_a*(-freq_matlab(1,1:length(fase_matlab)))' + coef_b);
@@ -223,28 +234,22 @@ plot(corr_cm,'-o');
 hold on
 plot(corr_ideal,'-o');
 
-
-% corr = (coef_a.*-freq_matlab(2,1:end-16) + coef_b)';
-
-%freq_dec = freq_dec(2:end);
-
 delay_N_dec = 165/2;
 
 
-%fase_dec = (fase_dec - corr);
 
 %% Filtro Media-Movel de ordem variavel
 
 janela_frac = true;
-[freq_cm,janela] = MAF_Variavel(freq_cm,janela_frac,T,nppc);
-freq_cm = -freq_cm;
+[freq_c,janela] = MAF_Variavel(freq_c',janela_frac,T,nppc,true,false);
+freq_c = -freq_c;
 
-[freq_matlab,janela] = MAF_Variavel(freq_matlab,janela_frac,1/960,16);
+[freq_matlab,janela] = MAF_Variavel(freq_matlab,janela_frac,1/960,16,true,false);
 freq_matlab = -freq_matlab;
 
 delay_mm = nppc/2;
 delay_f = floor(delay_N + delay_SG + delay_mm);
-freq_cm = freq_cm(delay_f+1:end);
+freq_c = freq_c(delay_f+1:end);
 
 delay_mm_dec = 16/2;
 delay_f_dec = floor(delay_N_dec + delay_SG_dec + delay_mm_dec);
@@ -303,7 +308,8 @@ ylabel("TVE(%)");
 
 %% FE 
 
-FE_cm = abs(f(1:length(freq_cm)) - (60+freq_cm))*1000;
+% FE_cm = abs(f(1:length(freq_c)) - (60+freq_c))*1000;
+FE_cm = abs(f(1:length(freq_c_fmmf)) - (60+freq_c_fmmf))*1000;
 FE_matlab = abs(f_dec(1:length(freq_matlab)) - (60+freq_matlab))*1000;
 
 figure;
@@ -330,7 +336,7 @@ xlabel("Amostra");
 
 %% ROCOF
 
-rocof_cm = diff(freq_cm)/T;
+rocof_cm = diff(freq_c_fmmf)/T;
 
 rocof_matlab = diff(freq_matlab)*960;
 

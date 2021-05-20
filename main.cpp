@@ -153,7 +153,11 @@ int main ()
         decimaSinal(&FasorTeste.iir, &FasorTeste.decim_sinal, x[0]);
         estimaFasor(&FasorTeste, x[0]);
         FasorTeste.frequencia = EstimarFrequencia(&FasorTeste.est_freq, FasorTeste.decim_sinal.flag, FasorTeste.fase, FasorTeste.frequencia);
-
+        if(FasorTeste.decim_sinal.flag)
+        {
+            FasorTeste.freq_rep = calculaMMFracionario(&FasorTeste.est_freq.fmmf, FasorTeste.frequencia, FasorTeste.frequencia, FS);
+        }
+        
         if(FasorTeste.decim_sinal.flag)
         {
             preparaReporte(&FasorTeste);
@@ -161,7 +165,7 @@ int main ()
             //sig_iir_teste << std::fixed << std::setprecision(12) << FasorTeste.iir.out_IIR << ";" << endl;
             fase_teste << std::fixed << std::setprecision(12) << FasorTeste.fase_corr << ";" << endl;
             mag_teste << std::fixed << std::setprecision(12) << FasorTeste.magnitude << ";" << endl;
-            freq_teste << std::fixed << std::setprecision(12) << FasorTeste.frequencia << ";" << endl;
+            freq_teste << std::fixed << std::setprecision(12) << FasorTeste.frequencia << ";" << FasorTeste.freq_rep << ";" << endl;
 
             if(FasorTeste.reportar)
             {

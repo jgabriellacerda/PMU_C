@@ -3,7 +3,8 @@
 
 #include "FiltroMediaMovel.h"
 
-#define N_MM_MAX 17
+#define N_MM_MIN 14
+#define N_MM_MAX 18
 
 struct FMM
 {
@@ -17,6 +18,18 @@ struct FMM
     double y0 = 0;
 };
 
+struct FMMFracionario
+{
+    int k0 = 0;
+    double buffMM[N_MM_MAX] = {0};
+    double soma_N14 = 0;
+    double soma_N15 = 0;
+    double soma_N16 = 0;
+    double soma_N17 = 0;
+
+};
+
 double calculaMediaMovel(FMM *fmm, double amostra, int N, bool unwrap);
+double calculaMMFracionario(FMMFracionario *fmmf, double amostra, double freq, int fs);
 
 #endif

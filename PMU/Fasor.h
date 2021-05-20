@@ -20,7 +20,7 @@ struct Fasor
 {
     double fase, fase_rep, fase_mm, fase_corr;
     double magnitude, mag_rep, mag_mm;
-    double frequencia = 0;
+    double frequencia = 0, freq_rep;
     int timestamp = 0;
     int frame_num = 0;
     int second = 0;

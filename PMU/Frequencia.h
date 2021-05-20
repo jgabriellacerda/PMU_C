@@ -5,6 +5,8 @@
 #include "FiltroSG.h"
 #endif
 
+#include "FiltroMediaMovel.h"
+
 #define SG1 1
 #define SG2 2
 
@@ -28,6 +30,7 @@ struct EstimacaoFrequencia
     SG sg1;
     SG sg2;
     FreqMux freqmux;
+    FMMFracionario fmmf;
 };
 
 double EstimarFrequencia(EstimacaoFrequencia *est_freq, bool estimar, double fase, double frequencia);
