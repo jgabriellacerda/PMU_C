@@ -3,11 +3,14 @@ function [TVE] = TVE(fase, magnitude, fasor_ref, fs, N, f_in, timestamp)
 %   Detailed explanation goes here
 
 
+
     T = 1/fs;
     t = (0:length(fasor_ref)-1)*T;
     fasor_fund = 1*exp(1i*2*(60)*pi.*t);
     
-    timestamp_ref = (0:length(fasor_ref)-1);
+    timestamp = timestamp*T;
+    
+    timestamp_ref = (0:length(fasor_ref)-1)*T;
 
     delay = floor(N/2);
 

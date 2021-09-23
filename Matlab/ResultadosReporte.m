@@ -2,6 +2,8 @@ clear all
 close all
 clc 
 
+opengl hardware
+
 tic
 
 %% Parametros
@@ -174,8 +176,10 @@ coef_b = -0.436483107452006;
 
 delay_N = (N+1)/2;
 
-file = sprintf('SinaisFrequencia/freq_c_%s0.txt',sTest);
-freq_c = load(file);
+file = sprintf('SinaisFrequencia/freq_rep_%s0.txt',sTest);
+freq_rep = load(file);
+delay_freq_rep = freq_rep(1,1);
+freq_rep = -freq_rep(:,2)';
 delay_SG = floor(17/2);
 
 [freq_matlab,legs,delay_SG_dec] = FreqSG(unwrap(fase_matlab),960);
@@ -189,17 +193,10 @@ fase_matlab = fase_matlab - corr_matlab;
 delay_N_dec = 165/2;
 
 %% Filtro Media-Movel de ordem variavel
-
 janela_frac = true;
-[freq_c,janela] = MAF_Variavel(freq_c,janela_frac,T,nppc);
-freq_c = -freq_c;
 
-[freq_matlab,janela] = MAF_Variavel(freq_matlab,janela_frac,1/960,16);
+[freq_matlab,janela] = MAF_Variavel(freq_matlab,janela_frac,1/960,16,true,false);
 freq_matlab = -freq_matlab;
-
-delay_mm = nppc/2;
-delay_f = floor(delay_N + delay_SG + delay_mm);
-freq_c = freq_c(delay_f+1:end);
 
 delay_mm_dec = 16/2;
 delay_f_dec = floor(delay_N_dec + delay_SG_dec + delay_mm_dec);
@@ -214,13 +211,16 @@ t = (0:length(fasor)-1)*T;
 fasor_fund = 1*exp(1i*2*(60)*pi.*t);
 ang_ref = (angle(fasor_fund) - angle(fasor));
 
+t_rep = timestamp*(1/60);
+
 figure;
-plot(unwrap(fase_rep(floor(delay_N+1):end)),'-o','LineWidth',3);
+plot(t_rep,unwrap(fase_rep),'-o','LineWidth',3);
 hold on
-plot(unwrap(fase_matlab(floor(delay_N+1):end)),'-o','LineWidth',3);
-plot(-unwrap(ang_ref),'-o','LineWidth',3);
+plot(t,unwrap(fase_matlab),'-o','LineWidth',3);
+plot(t,-unwrap(ang_ref),'-o','LineWidth',3);
 title('Fase');
 legend("C","MatLab");
+xlim([floor(delay_N+1)*(1/960) inf]);
 
 figure;
 plot(mag_rep,'-o','LineWidth',3);
@@ -259,17 +259,26 @@ ylabel("TVE(%)");
 
 %% FE 
 
-FE_cm = abs(f(1:length(freq_c)) - (60+freq_c))*1000;
+freq_ref_60hz = downsample(f,16);
+
+% freq_rep = (freq_rep(2:end) + freq_rep(1:end-1))/2;
+% freq_rep = freq_rep(delay_SG_dec:end)
+freq_rep = freq_rep(2:end)
+
+tam_freq = min([length(freq_ref_60hz) length(freq_rep)]);
+FE_rep = abs(freq_ref_60hz(1:tam_freq) - (60+freq_rep(1:tam_freq)))*1000;
 FE_matlab = abs(f_dec(1:length(freq_matlab)) - (60+freq_matlab))*1000;
 
 figure;
 
-lim_fe = ones([length(FE_cm) 1])*fe_lim;
+t = (0:length(FE_rep)-1)/60;
+
+lim_fe = ones([length(FE_rep) 1])*fe_lim;
 subplot(2,1,1);
-plot(FE_cm,'-o','LineWidth',3); hold on
-plot(lim_fe,'LineWidth',3);
+plot(t,FE_rep,'-o','LineWidth',3); hold on
+plot(t,lim_fe,'LineWidth',3);
 title('C');
-xlim([fs length(f)-fs]);
+xlim([1 length(FE_rep)/60-1]);
 ylim([0 fe_lim]);
 ylabel("FE(mHz)");
 legend("FE","Limite");
@@ -286,11 +295,16 @@ xlabel("Amostra");
 
 %% ROCOF
 
-rocof_cm = diff(freq_c)/T;
+file = sprintf('SinaisFrequencia/rocof_rep_%s0.txt',sTest);
+rocof_rep = load(file);
+rocof_rep = -rocof_rep(:,2)';
+
+%rocof_rep = diff(freq_rep)/T;
 
 rocof_matlab = diff(freq_matlab)*960;
 
-RFE_cm = abs(diff(f(1:length(rocof_cm)+1))/T - rocof_cm);
+tam_rocof = min([length(rocof_rep) length(freq_ref_60hz)]);
+RFE_cm = abs(diff(freq_ref_60hz(1:tam_rocof+1))*60 - rocof_rep(1:tam_rocof));
 
 RFE_matlab = abs(diff(f_dec(1:length(rocof_matlab)+1))*960 - rocof_matlab);
 
@@ -301,7 +315,7 @@ subplot(2,1,1);
 plot(RFE_cm,'-o','LineWidth',3); hold on
 plot(lim_rfe,'LineWidth',3);
 title('C');
-xlim([fs length(f)-fs]);
+xlim([60 length(RFE_cm)-60]);
 ylim([0 rfe_lim])
 ylabel("RFE(Hz/s)");
 legend("RFE","Limite");
@@ -319,16 +333,16 @@ xlabel("Amostra");
 
 %% Resultados
 
-max_TVE_cm = max(TVE_cm(fs:length(f)-fs))
-max_FE_cm = max(FE_cm(fs:length(f)-fs))
-max_RFE_cm = max(RFE_cm(fs:length(f)-fs))
+max_TVE_rep = max(TVE_cm(60:length(TVE_cm)-60))
+max_FE_rep = max(FE_rep(60:length(TVE_cm)-60))
+max_RFE_rep = max(RFE_cm(60:length(TVE_cm)-60))
 
 max_TVE_matlab = max(TVE_matlab(960:length(f_dec)-960))
 max_FE_matlab = max(FE_matlab(960:length(f_dec)-960))
 max_RFE_matlab = max(RFE_matlab(960:length(f_dec)-960))
 
 % resultados = [max_TVE_cm max_FE_cm max_RFE_cm max_TVE_matlab max_FE_matlab max_RFE_matlab];
-resultados = [max_TVE_cm max_FE_cm max_RFE_cm];
+resultados = [max_TVE_rep max_FE_rep max_RFE_rep];
 
 
 %% Response time 
@@ -350,7 +364,7 @@ if TEST == PHASE_STEP
     over_limit_phase_samples = max(over_limit_phase) - min(over_limit_phase);
     over_limit_phase_time_cm = over_limit_phase_samples*(1/960)
 
-    over_limit_freq = find(FE_cm(960:end-960) > 0.005);
+    over_limit_freq = find(FE_rep(960:end-960) > 0.005);
     over_limit_freq_samples = max(over_limit_freq) - min(over_limit_freq);
     over_limit_freq_time_cm = over_limit_freq_samples*(1/960)
 
@@ -360,7 +374,9 @@ if TEST == PHASE_STEP
 end
 
 
-
+T = 1/60;
+t = (0:length(fasor)-1)*T;
+fasor_fund = 1*exp(1i*2*(60)*pi.*t);
 fase_ref = -unwrap((angle(fasor_fund) - angle(fasor)));
 diff_fase = diff(fase_ref);
 degrau = find(diff_fase == max(diff_fase));
