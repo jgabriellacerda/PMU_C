@@ -5,7 +5,7 @@
 #include "FiltroIIR.h"
 #endif
 
-#define FATOR_DECIM 16
+// #define FATOR_DECIM 16
 
 struct Decimador
 {
@@ -17,6 +17,6 @@ struct Decimador
 };
 
 void decimaSinal(IIR *iir, Decimador *decim, double amostra);
-bool downsample(Decimador *decim, double amostra, int delay);
+bool downsample(Decimador *decim, double amostra, int delay, const int FATOR_DECIM);
 
 #endif

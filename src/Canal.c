@@ -34,15 +34,15 @@ void preparaReporte(Canal* canal)
     fasor->fase_mm = calculaMediaMovel(&fasor->fmm_fase, fasor->fase_corr, 17, true);
     fasor->mag_mm = calculaMediaMovel(&fasor->fmm_mag, fasor->magnitude, 17, false);
 
-    if(downsample(&fasor->decim_fase, fasor->fase_mm, 2+8))
+    if(downsample(&fasor->decim_fase, fasor->fase_mm, 2+8, 16))
     {
         canal->fase_pronto = true;
     }
-    if(downsample(&fasor->decim_mag, fasor->mag_mm, 2+8))
+    if(downsample(&fasor->decim_mag, fasor->mag_mm, 2+8, 16))
     {
         canal->mag_pronto = true;
     }
-    if(downsample(&fasor->decim_freq, fasor->freq_mm, 3))
+    if(downsample(&fasor->decim_freq, fasor->freq_mm, 3, 16))
     {
         canal->freq_pronto = true;
         fasor->freq_rep = fasor->freq_mm;

@@ -7,7 +7,7 @@ void decimaSinal(IIR *iir, Decimador *decim, double amostra)
 
     CalcularIIR(iir, amostra);
 
-    downsample(decim, iir->out_IIR, 0);
+    downsample(decim, iir->out_IIR, 0, 16);
 
     // decim->cont_amostras = decim->cont_amostras % FATOR_DECIM;
 
@@ -24,7 +24,7 @@ void decimaSinal(IIR *iir, Decimador *decim, double amostra)
     
 }
 
-bool downsample(Decimador *decim, double amostra, int delay)
+bool downsample(Decimador *decim, double amostra, int delay, const int FATOR_DECIM)
 {
     decim->cont_amostras = decim->cont_amostras % FATOR_DECIM;
 
