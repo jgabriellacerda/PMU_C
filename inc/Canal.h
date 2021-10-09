@@ -18,16 +18,22 @@ Fasor.o DFT.o FiltroSG.o Frequencia.o FiltroIIR.o Decimacao.o
 
 struct Canal
 {
-    Fasor fasor;
+    Fasor* fasor;
     bool freq_pronto = false, fase_pronto = false, mag_pronto = false;
     int timestamp = 0;
     int frame_num = 0;
     int second = 0;
     bool reportar = false;
     double rocof;
+
+    int fs, nppc;
+
+    void (*processaAmostra)(Canal* canal, double amostra);
 };
 
-void processaAmostra(Canal* canal, double amostra);
+Canal* new_canal(int fs);
+
+static void processaAmostra(Canal* canal, double amostra);
 void preparaReporte(Canal *canal);
 
 #endif

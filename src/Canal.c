@@ -1,8 +1,17 @@
 #include "Canal.h"
 
-void processaAmostra(Canal* canal, double amostra)
+Canal* new_canal(int fs)
 {
-    Fasor* fasor = &canal->fasor; 
+    Canal* canal = (Canal*)calloc(1, sizeof(Canal));
+    canal->fasor = new_fasor(fs);
+    canal->processaAmostra = processaAmostra;
+    canal->nppc = (int)fs/60.0;
+    return canal;
+}
+
+static void processaAmostra(Canal* canal, double amostra)
+{
+    Fasor* fasor = canal->fasor; 
 
     decimaSinal(&fasor->iir, &fasor->decim_sinal, amostra);
     
@@ -23,7 +32,7 @@ void processaAmostra(Canal* canal, double amostra)
 
 void preparaReporte(Canal* canal)
 {
-    Fasor* fasor = &canal->fasor;
+    Fasor* fasor = canal->fasor;
 
     double corr = 0, corr_a = -0.007332419963127, corr_b = -0.436483107452006;
 
@@ -31,18 +40,18 @@ void preparaReporte(Canal* canal)
 
     fasor->fase_corr = fasor->fase - corr;
 
-    fasor->fase_mm = calculaMediaMovel(&fasor->fmm_fase, fasor->fase_corr, 17, true);
-    fasor->mag_mm = calculaMediaMovel(&fasor->fmm_mag, fasor->magnitude, 17, false);
+    fasor->fase_mm = calculaMediaMovel(&fasor->fmm_fase, fasor->fase_corr, canal->nppc+1, true);
+    fasor->mag_mm = calculaMediaMovel(&fasor->fmm_mag, fasor->magnitude, canal->nppc+1, false);
 
-    if(downsample(&fasor->decim_fase, fasor->fase_mm, 2+8, 16))
+    if(downsample(&fasor->decim_fase, fasor->fase_mm, 2+8, canal->nppc))
     {
         canal->fase_pronto = true;
     }
-    if(downsample(&fasor->decim_mag, fasor->mag_mm, 2+8, 16))
+    if(downsample(&fasor->decim_mag, fasor->mag_mm, 2+8, canal->nppc))
     {
         canal->mag_pronto = true;
     }
-    if(downsample(&fasor->decim_freq, fasor->freq_mm, 3, 16))
+    if(downsample(&fasor->decim_freq, fasor->freq_mm, 3, canal->nppc))
     {
         canal->freq_pronto = true;
         fasor->freq_rep = fasor->freq_mm;

@@ -10,8 +10,6 @@ function [fase,magnitude,re,im,N,W] = DFT(sinal, fs, N, Fr)
     Gain = sqrt(2)/sum(W);   
 %     W = W*Gain;
 
-
-
     for pp = 1:length(sinal(1,:))
 
         x = sinal(:,pp);

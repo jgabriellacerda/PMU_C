@@ -2,12 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <time.h>
 #include "../parameters.h"
 #include "Canal.h"
-
-// Variaveis Globais
-
-Canal canal1;
 
 // Prototipos de Funcoes
 
@@ -15,6 +12,12 @@ double get_sample(FILE* pFile);
 
 int main ()
 {
+    clock_t start, end;
+
+    int fs = 960;
+
+    Canal* canal1 = new_canal(fs);
+
     double sample;
 
     const char* filename = "Matlab/SinaisTeste/sinal_FRD.txt";
@@ -50,8 +53,6 @@ int main ()
 
     printf("> Start\n");
 
-    init_DFT();
-
     printf("> Init DFT\n");
 
     // ofstream fase_teste("Matlab/SinaisFaseMagC/fase_c_FRD0.txt");
@@ -60,21 +61,43 @@ int main ()
 
     printf("> Open Files\n");
 
-    while((sample = get_sample(sinal_teste)))
+    double signal[184320];
+
+    for(int i = 0; i < 184320; i++)
     {
-        sample = sample/(double)1000.0;
-        // printf("%f\n",sample);
-        processaAmostra(&canal1, sample);
+        signal[i] = get_sample(sinal_teste);
+    }
 
+    start = clock();
 
-        if(canal1.reportar)
+    for(int j = 0; j < 1; j++)
+    {
+        for(int i = 0; i < 184320; i++)
         {
-            fprintf(fase_rep, "%d;%.12lf;\n", canal1.timestamp, canal1.fasor.fase_rep);
-            fprintf(mag_rep, "%d;%.12lf;\n", canal1.timestamp, canal1.fasor.mag_rep);
-            fprintf(freq_rep, "%d;%.12lf;\n", canal1.timestamp, canal1.fasor.freq_rep);
-            fprintf(rocof_rep, "%d;%.12lf;\n", canal1.timestamp, canal1.rocof);
+            sample = signal[i];
+
+        // while((sample = get_sample(sinal_teste)))
+        // {
+            sample = sample/(double)1000.0;
+
+            canal1->processaAmostra(canal1, sample);
+
+
+            if(canal1->reportar)
+            {
+                fprintf(fase_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->fasor->fase_rep);
+                fprintf(mag_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->fasor->mag_rep);
+                fprintf(freq_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->fasor->freq_rep);
+                fprintf(rocof_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->rocof);
+            }
         }
     }
+
+    end = clock();
+
+    double time_taken = ((double)(end - start))/(double)CLOCKS_PER_SEC;
+
+    printf("Tempo = %lf\n", time_taken);
 
     fclose(sinal_teste);
     fclose(fase_rep);

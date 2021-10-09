@@ -263,7 +263,7 @@ freq_ref_60hz = downsample(f,16);
 
 % freq_rep = (freq_rep(2:end) + freq_rep(1:end-1))/2;
 % freq_rep = freq_rep(delay_SG_dec:end)
-freq_rep = freq_rep(2:end)
+freq_rep = freq_rep(2:end);
 
 tam_freq = min([length(freq_ref_60hz) length(freq_rep)]);
 FE_rep = abs(freq_ref_60hz(1:tam_freq) - (60+freq_rep(1:tam_freq)))*1000;

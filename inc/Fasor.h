@@ -22,7 +22,7 @@ struct Fasor
     double magnitude, mag_rep, mag_mm;
     double frequencia = 0, freq_mm, freq_rep;
 
-    DFT dft;
+    DFT* dft;
     EstimacaoFrequencia est_freq;
     IIR iir;
     Decimador decim_sinal;
@@ -35,6 +35,8 @@ struct Fasor
     //SG sg1;
     //SG sg2;
 };
+
+Fasor* new_fasor(int fs);
 
 void estimaFasor(Fasor *fasor, double amostra);
 
