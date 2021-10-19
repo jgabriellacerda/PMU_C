@@ -15,25 +15,39 @@ Fasor.o DFT.o FiltroSG.o Frequencia.o FiltroIIR.o Decimacao.o
 */
 
 #include "Fasor.h"
+#include "FiltroIIR.h"
+#include "Decimation.h"
 
-struct Canal
+struct Channel
 {
     Fasor* fasor;
-    bool freq_pronto = false, fase_pronto = false, mag_pronto = false;
+
+    IIR* iir;
+    Decimator* decim_sinal;
+    Decimator* decim_fase;
+    Decimator* decim_mag;
+    Decimator* decim_freq;
+    Decimator* decim_rocof;
+
+    double fase_rep, mag_rep, freq_rep;
+    bool freq_pronto = false, fase_pronto = false, mag_pronto = false, rocof_pronto = false;
     int timestamp = 0;
     int frame_num = 0;
     int second = 0;
     bool reportar = false;
-    double rocof;
+    double rocof, rocof_mm, rocof_rep;
+    FMM fmm_rocof;
 
     int fs, nppc;
 
-    void (*processaAmostra)(Canal* canal, double amostra);
+    void (*processSample)(Channel* canal, double amostra);
+    void (*decimateParameters)(Channel* channel);
 };
 
-Canal* new_canal(int fs);
+Channel* newChannel(int fs);
 
-static void processaAmostra(Canal* canal, double amostra);
-void preparaReporte(Canal *canal);
+static void processSample(Channel* canal, double amostra);
+static void decimateParameters(Channel* channel);
+static void updateReport(Channel *canal);
 
 #endif

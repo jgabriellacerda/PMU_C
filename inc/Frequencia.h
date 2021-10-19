@@ -36,10 +36,10 @@ struct EstimacaoFrequencia
     double freq_ant;
 };
 
-double EstimarFrequencia(EstimacaoFrequencia *est_freq, bool estimar, double fase, double frequencia);
-void DetectarSalto(FreqMux *freqmux, float fase);
-void AtualizarEstado(FreqMux *freqmux);
-void AtualizarUnwrapFase(FreqMux *freqmux);
+double estimaFrequencia(EstimacaoFrequencia *est_freq, bool estimar, double fase, double frequencia);
+void detectaSalto(FreqMux *freqmux, float fase);
+void atualizaEstado(FreqMux *freqmux);
+void atualizaUnwrapFase(FreqMux *freqmux);
 double estimaROCOF(EstimacaoFrequencia* est_freq, double freq);
 
 #endif

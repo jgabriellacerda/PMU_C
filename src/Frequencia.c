@@ -1,33 +1,32 @@
 #include "Frequencia.h"
 
-double EstimarFrequencia(EstimacaoFrequencia *est_freq, bool estimar, double fase, double frequencia)
+double estimaFrequencia(EstimacaoFrequencia *self, bool estimar, double fase, double frequencia)
 {
-    //EstimacaoFrequencia *est_freq = &fasor->est_freq;
-    FreqMux *freqmux = &est_freq->freqmux;
+    FreqMux *freqmux = &self->freqmux;
 
     if(estimar)
     {
-        DetectarSalto(freqmux, fase);
-        AtualizarEstado(freqmux);
-        AtualizarUnwrapFase(freqmux);
+        detectaSalto(freqmux, fase);
+        atualizaEstado(freqmux);
+        atualizaUnwrapFase(freqmux);
 
         if(freqmux->SG_out == SG1)
         {
-            CalcularSG(&est_freq->sg1, fase + freqmux->offset_SG1);
-            AtualizarBufferSG(&est_freq->sg2, fase + freqmux->offset_SG2);
-            frequencia = est_freq->sg1.outSG;
+            CalcularSG(&self->sg1, fase + freqmux->offset_SG1);
+            AtualizarBufferSG(&self->sg2, fase + freqmux->offset_SG2);
+            frequencia = self->sg1.outSG;
         }
         else if(freqmux->SG_out == SG2)
         {
-            CalcularSG(&est_freq->sg2, fase + freqmux->offset_SG2);
-            AtualizarBufferSG(&est_freq->sg1, fase + freqmux->offset_SG1);
-            frequencia = est_freq->sg2.outSG;
+            CalcularSG(&self->sg2, fase + freqmux->offset_SG2);
+            AtualizarBufferSG(&self->sg1, fase + freqmux->offset_SG1);
+            frequencia = self->sg2.outSG;
         }
     }
     return frequencia;
 }
 
-void DetectarSalto(FreqMux *freqmux, float fase)
+void detectaSalto(FreqMux *freqmux, float fase)
 {
     if(fase - freqmux->fase_ant < -6)
     {
@@ -44,7 +43,7 @@ void DetectarSalto(FreqMux *freqmux, float fase)
     freqmux->fase_ant = fase;
 }
 
-void AtualizarEstado(FreqMux *freqmux)
+void atualizaEstado(FreqMux *freqmux)
 {
     // Controle de estado
     switch(freqmux->estado)
@@ -105,7 +104,7 @@ void AtualizarEstado(FreqMux *freqmux)
     }
 }
 
-void AtualizarUnwrapFase(FreqMux *freqmux)
+void atualizaUnwrapFase(FreqMux *freqmux)
 {
     switch(freqmux->estado)
     {
@@ -128,9 +127,9 @@ void AtualizarUnwrapFase(FreqMux *freqmux)
     }
 }
 
-double estimaROCOF(EstimacaoFrequencia* est_freq, double freq)
+double estimaROCOF(EstimacaoFrequencia* self, double freq)
 {
-    double rocof = (freq - est_freq->freq_ant)*FS_D;
-    est_freq->freq_ant = freq;
+    double rocof = (freq - self->freq_ant)*FS_D;
+    self->freq_ant = freq;
     return rocof;
 }

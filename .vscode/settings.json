@@ -76,6 +76,7 @@
         "variant": "cpp",
         "stat.h": "c",
         "xlocale": "cpp",
-        "xlocnum": "cpp"
+        "xlocnum": "cpp",
+        "stdlib.h": "c"
     }
 }

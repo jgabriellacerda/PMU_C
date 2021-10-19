@@ -297,16 +297,18 @@ xlabel("Amostra");
 
 file = sprintf('SinaisFrequencia/rocof_rep_%s0.txt',sTest);
 rocof_rep = load(file);
-rocof_rep = -rocof_rep(:,2)';
+rocof_rep = -rocof_rep(2:end,2)';
 
 %rocof_rep = diff(freq_rep)/T;
 
 rocof_matlab = diff(freq_matlab)*960;
 
 tam_rocof = min([length(rocof_rep) length(freq_ref_60hz)]);
-RFE_cm = abs(diff(freq_ref_60hz(1:tam_rocof+1))*60 - rocof_rep(1:tam_rocof));
+rocof_ref_60hz = diff(freq_ref_60hz(1:tam_rocof+1))*60;
+RFE_cm = abs(rocof_ref_60hz - rocof_rep(1:tam_rocof));
 
-RFE_matlab = abs(diff(f_dec(1:length(rocof_matlab)+1))*960 - rocof_matlab);
+rocof_ref = diff(f_dec(1:length(rocof_matlab)+1))*960;
+RFE_matlab = abs(rocof_ref - rocof_matlab);
 
 figure;
 

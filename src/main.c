@@ -4,7 +4,8 @@
 #include <sys/stat.h>
 #include <time.h>
 #include "../parameters.h"
-#include "Canal.h"
+#include "Channel.h"
+#include <string.h>
 
 // Prototipos de Funcoes
 
@@ -16,36 +17,54 @@ int main ()
 
     int fs = 960;
 
-    Canal* canal1 = new_canal(fs);
+    Channel* channel1 = newChannel(fs);
 
     double sample;
 
-    const char* filename = "Matlab/SinaisTeste/sinal_FRD.txt";
+    char sTest[] = "FRD";
+
+    char filename[50] = "Matlab/SinaisTeste/sinal_";
+    strcat(filename, sTest);
+    strcat(filename, ".txt");
     FILE* sinal_teste = fopen(filename,"r");
     if (!sinal_teste) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
-    FILE* fase_rep = fopen("Matlab/SinaisFaseMagReporte/fase_rep_FRD0.txt","w");
+    char file_ext[8];
+    strcpy(file_ext, sTest);
+    strcat(file_ext, "0.txt");
+
+    char fase_rep_file[60] = "Matlab/SinaisFaseMagReporte/fase_rep_";
+    strcat(fase_rep_file, file_ext);
+    FILE* fase_rep = fopen(fase_rep_file,"w");
     if (!fase_rep) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
-    FILE* mag_rep = fopen("Matlab/SinaisFaseMagReporte/mag_rep_FRD0.txt","w");
+    printf("\n%s\n", fase_rep_file);
+
+    char mag_rep_file[60] = "Matlab/SinaisFaseMagReporte/mag_rep_";
+    strcat(mag_rep_file, file_ext);
+    FILE* mag_rep = fopen(mag_rep_file,"w");
     if (!mag_rep) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
-    FILE* freq_rep = fopen("Matlab/SinaisFrequencia/freq_rep_FRD0.txt","w");
+    char freq_rep_file[60] = "Matlab/SinaisFrequencia/freq_rep_";
+    strcat(freq_rep_file, file_ext);
+    FILE* freq_rep = fopen(freq_rep_file,"w");
     if (!freq_rep) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
-    FILE* rocof_rep = fopen("Matlab/SinaisFrequencia/rocof_rep_FRD0.txt","w");
+    char rocof_rep_file[60] = "Matlab/SinaisFrequencia/rocof_rep_";
+    strcat(rocof_rep_file, file_ext);
+    FILE* rocof_rep = fopen(rocof_rep_file,"w");
     if (!rocof_rep) {
         perror("fopen");
         exit(EXIT_FAILURE);
@@ -80,15 +99,15 @@ int main ()
         // {
             sample = sample/(double)1000.0;
 
-            canal1->processaAmostra(canal1, sample);
+            channel1->processSample(channel1, sample);
 
 
-            if(canal1->reportar)
+            if(channel1->reportar)
             {
-                fprintf(fase_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->fasor->fase_rep);
-                fprintf(mag_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->fasor->mag_rep);
-                fprintf(freq_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->fasor->freq_rep);
-                fprintf(rocof_rep, "%d;%.12lf;\n", canal1->timestamp, canal1->rocof);
+                fprintf(fase_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->fase_rep);
+                fprintf(mag_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->mag_rep);
+                fprintf(freq_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->freq_rep);
+                fprintf(rocof_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->rocof);
             }
         }
     }
