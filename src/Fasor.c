@@ -14,7 +14,8 @@ void estimaFasor(Fasor *fasor, double amostra, bool flag)
 
     if(flag)
     {
-        calculaDFT(fasor->dft, amostra);
+        // calculaDFT(fasor->dft, amostra);
+        symmetricDFT(fasor->dft, (float)amostra);
         
         fasor->fase = atan2f(fasor->dft->im,fasor->dft->re);// *180.00/pi;
         fasor->magnitude = sqrtf(fasor->dft->re*fasor->dft->re + fasor->dft->im*fasor->dft->im);

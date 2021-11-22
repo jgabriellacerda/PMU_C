@@ -14,7 +14,7 @@ Decimator* newDecimator()
 
 static double decimateSignal(IIR* iir, Decimator* self, double sample)
 {
-    iir->calculaIIR(iir, sample);
+    iir->calculaIIR(iir, (float)sample);
     sample =  downsample(self, iir->out_IIR, 0, 16);
     return sample;
 }

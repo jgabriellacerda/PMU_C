@@ -70,13 +70,8 @@ int main ()
         exit(EXIT_FAILURE);
     }
 
+    
     printf("> Start\n");
-
-    printf("> Init DFT\n");
-
-    // ofstream fase_teste("Matlab/SinaisFaseMagC/fase_c_FRD0.txt");
-    // ofstream mag_teste("Matlab/SinaisFaseMagC/mag_c_FRD0.txt");
-    // ofstream freq_teste("Matlab/SinaisFrequencia/freq_c_FRD0.txt");
 
     printf("> Open Files\n");
 
@@ -114,10 +109,109 @@ int main ()
 
     end = clock();
 
+    long int clocks = (end - start);
     double time_taken = ((double)(end - start))/(double)CLOCKS_PER_SEC;
 
     printf("Tempo = %lf\n", time_taken);
+    printf("Clocks = %d\n", clocks);
+    printf("Clocks/s = %d\n", CLOCKS_PER_SEC);
 
+    // long int iterations = 100000000;
+
+    // int n = 0;
+    // start = clock();
+
+    // for(long int j = 0; j < iterations; j++)
+    // {
+    //     n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}
+    //     n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}n=n-1;if(n==0){n=100;}
+    // }
+
+    // end = clock();
+
+    // clocks = (end - start);
+
+    // printf("Ifs = %d\n", clocks);
+
+    // n = 0;
+    // start = clock();
+
+    // for(long int j = 0; j < iterations; j++)
+    // {
+    //     n = (n+1) % 100;n = (n+1) % 100;n = (n+1) % 100;n = (n+1) % 100;n = (n+1) % 100;
+    //     n = (n+1) % 100;n = (n+1) % 100;n = (n+1) % 100;n = (n+1) % 100;n = (n+1) % 100;
+    // }
+
+    // end = clock();
+
+    // clocks = (end - start);
+
+    // printf("Mod = %d\n", clocks);
+
+    // n = 0;
+    // start = clock();
+
+    // for(long int j = 0; j < iterations; j++)
+    // {
+    //     n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);
+    //     n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);n = (n == 100)*0 + (n < 100)*(n+1);
+    // }
+
+    // end = clock();
+
+    // clocks = (end - start);
+
+    // printf("Logic = %d\n", clocks);
+
+    // n = 0;
+    // start = clock();
+
+    // for(long int j = 0; j < iterations; j++)
+    // {
+    //     n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;
+    //     n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;n = (n == 0) ? 100 : n-1;
+    // }
+
+    // end = clock();
+
+    // clocks = (end - start);
+
+    // printf("Question = %d\n", clocks);
+
+    int iterations = 184320;
+
+    DFT* dft1 = new_dft(fs);
+    start = clock();
+
+    for(long int j = 0; j < iterations; j++)
+    {
+        sample = signal[j];
+        calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);
+        calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);
+
+    }
+
+    end = clock();
+
+    clocks = (end - start);
+
+    printf("DFT = %d\n", clocks);
+
+    start = clock();
+
+    for(long int j = 0; j < iterations; j++)
+    {
+        sample = signal[j];
+        symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);
+        symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);
+    }
+
+    end = clock();
+
+    clocks = (end - start);
+
+    printf("Symmetric = %d\n", clocks);
+    
     fclose(sinal_teste);
     fclose(fase_rep);
     fclose(mag_rep);

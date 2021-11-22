@@ -41,17 +41,9 @@ static void calculaIIR(IIR* self, double amostra)
     {
 
         out_nIIR += self->buff_nIIR[self->k0_n] * self->num_IIR[jj];
-        self->k0_n--;
-        if (self->k0_n < 0) 
-        {
-            self->k0_n = self->k0_n + self->size_num; 
-        }
+        self->k0_n = (self->k0_n == 0) ? self->size_num-1 : self->k0_n - 1;
     }
-    self->k0_n++;
-    if (self->k0_n > self->size_num-1)
-    {
-        self->k0_n -= self->size_num; 
-    }
+    self->k0_n = (self->k0_n == self->size_num-1) ? 0 : self->k0_n + 1;
 
     // Denominador
     self->buff_dIIR[self->k0_d] = self->out_IIR_anterior; 
@@ -60,17 +52,9 @@ static void calculaIIR(IIR* self, double amostra)
     {
 
         out_dIIR += self->buff_dIIR[self->k0_d] * self->den_IIR[jj+1];
-        self->k0_d--;
-        if (self->k0_d < 0) 
-        {
-            self->k0_d += self->size_den; 
-        }
+        self->k0_d = (self->k0_d == 0) ? self->size_den-1 : self->k0_d - 1;
     }
-    self->k0_d++;
-    if (self->k0_d > self->size_den-1) 
-    {
-        self->k0_d -= self->size_den; 
-    }
+    self->k0_d = (self->k0_d == self->size_den-1) ? 0 : self->k0_d + 1;
 
     self->out_IIR = (out_nIIR - out_dIIR)/self->den_IIR[0];
     self->out_IIR_anterior = self->out_IIR;
