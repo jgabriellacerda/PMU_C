@@ -17,7 +17,7 @@ int main ()
 
     int fs = 960;
 
-    Channel* channel1 = newChannel(fs);
+    Channel* channel1 = newChannel(fs, false);
 
     double sample;
 
@@ -84,7 +84,7 @@ int main ()
 
     start = clock();
 
-    for(int j = 0; j < 1; j++)
+    for(int j = 0; j < 0; j++)
     {
         for(int i = 0; i < 184320; i++)
         {
@@ -178,39 +178,79 @@ int main ()
 
     // printf("Question = %d\n", clocks);
 
-    int iterations = 184320;
+    // int iterations = 184320;
 
-    DFT* dft1 = new_dft(fs);
+    // DFT* dft1 = new_dft(fs);
+    // start = clock();
+
+    // for(long int j = 0; j < iterations; j++)
+    // {
+    //     sample = signal[j];
+    //     calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);
+    //     calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);
+
+    // }
+
+    // end = clock();
+
+    // clocks = (end - start);
+
+    // printf("DFT = %d\n", clocks);
+
+    // start = clock();
+
+    // for(long int j = 0; j < iterations; j++)
+    // {
+    //     sample = signal[j];
+    //     symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);
+    //     symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);
+    // }
+
+    // end = clock();
+
+    // clocks = (end - start);
+
+    // printf("Symmetric = %d\n", clocks);
+
+    long int iterations = 184320*10000;
+
+    Channel* ch2 = newChannel(960, false);
+
+    int p = 0;
+
     start = clock();
 
     for(long int j = 0; j < iterations; j++)
-    {
-        sample = signal[j];
-        calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);
-        calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);calculaDFT(dft1, sample);
-
+    {   
+        sample = signal[p];
+        ch2->processSample(ch2,sample);
+        p = (p == 184320-1) ? 0 : p + 1;
     }
 
     end = clock();
 
     clocks = (end - start);
 
-    printf("DFT = %d\n", clocks);
+    printf("Channel default = %d\n", clocks);
+
+    Channel* ch3 = newChannel(960, true);
+
+    p = 0;
 
     start = clock();
 
     for(long int j = 0; j < iterations; j++)
-    {
-        sample = signal[j];
-        symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);
-        symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);symmetricDFT(dft1, sample);
+    {   
+        sample = signal[p];
+        ch3->processSample(ch3,sample);
+        p = (p == 184320-1) ? 0 : p + 1;
     }
 
     end = clock();
 
     clocks = (end - start);
 
-    printf("Symmetric = %d\n", clocks);
+    printf("Channel symmetric = %d\n", clocks);
     
     fclose(sinal_teste);
     fclose(fase_rep);

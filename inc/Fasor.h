@@ -11,13 +11,15 @@ struct Fasor
     double magnitude, mag_mm;
     double frequencia = 0, freq_mm;
 
+    bool symmetric;
+
     DFT* dft;
     EstimacaoFrequencia est_freq;
     FMM fmm_fase;
     FMM fmm_mag;
 };
 
-Fasor* new_fasor(int fs);
+Fasor* new_fasor(int fs, bool symmetric);
 
 void estimaFasor(Fasor *fasor, double amostra, bool flag);
 

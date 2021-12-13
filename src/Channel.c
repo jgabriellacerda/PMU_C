@@ -1,7 +1,7 @@
 #include "Channel.h"
 #include <stdio.h>
 
-Channel* newChannel(int fs)
+Channel* newChannel(int fs, bool symmetric)
 {
     Channel* channel = (Channel*)calloc(1, sizeof(Channel));
 
@@ -15,10 +15,10 @@ Channel* newChannel(int fs)
     channel->decim_freq = newDecimator();
     channel->decim_rocof = newDecimator();
 
-    channel->fasor = new_fasor(fs);
+    channel->fasor = new_fasor(960, symmetric);
     channel->processSample = processSample;
     channel->decimateParameters = decimateParameters;
-    channel->nppc = (int)fs/60.0;
+    channel->nppc = (int)960/60.0;
     channel->fs = fs;
 
     return channel;

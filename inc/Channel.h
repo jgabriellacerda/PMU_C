@@ -44,7 +44,7 @@ struct Channel
     void (*decimateParameters)(Channel* channel);
 };
 
-Channel* newChannel(int fs);
+Channel* newChannel(int fs, bool symmetric);
 
 static void processSample(Channel* canal, double amostra);
 static void decimateParameters(Channel* channel);

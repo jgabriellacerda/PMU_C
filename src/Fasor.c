@@ -1,10 +1,10 @@
 #include "Fasor.h"
 
-Fasor* new_fasor(int fs)
+Fasor* new_fasor(int fs, bool symmetric)
 {
     Fasor* fasor = (Fasor*)calloc(1, sizeof(Fasor));
     fasor->dft = new_dft(fs);
-
+    fasor->symmetric = symmetric;
     return fasor;
 }
 
@@ -14,8 +14,14 @@ void estimaFasor(Fasor *fasor, double amostra, bool flag)
 
     if(flag)
     {
-        // calculaDFT(fasor->dft, amostra);
-        symmetricDFT(fasor->dft, (float)amostra);
+        if(fasor->symmetric)
+        {
+            symmetricDFT(fasor->dft, (float)amostra);
+        }
+        else
+        {
+            calculaDFT(fasor->dft, amostra);
+        }
         
         fasor->fase = atan2f(fasor->dft->im,fasor->dft->re);// *180.00/pi;
         fasor->magnitude = sqrtf(fasor->dft->re*fasor->dft->re + fasor->dft->im*fasor->dft->im);
