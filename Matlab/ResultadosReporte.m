@@ -15,7 +15,8 @@ ciclos = 30;
 ind = 1; %canal
 T = 1/fs;
 Fr = 8.19;
-ruido = false;
+ruido = true;
+SNR = 40;
 
 %[W,N] = gera_coef_w(N,fs,Fr);
 %Gain = sqrt(2)/sum(W)
@@ -74,7 +75,7 @@ switch TEST
         end
         
         if ruido 
-            signal = soma_ruido(signal,1,60); % Insere ruido no sinal
+            signal = soma_ruido(signal,1,SNR); % Insere ruido no sinal
         end
 
         t_dec = (0:960*12-1)/960; % 10 seconds
@@ -95,7 +96,7 @@ switch TEST
         signal = real(fasor);
         
         if ruido 
-            signal = soma_ruido(signal,1,50); % Insere ruido no sinal
+            signal = soma_ruido(signal,1,SNR); % Insere ruido no sinal
         end
 
         t_dec = (0:960*12-1)/960; % 10 seconds
@@ -141,7 +142,7 @@ if TEST ~= HARMONIC & TEST ~= FUND
     signal = real(fasor);
     
     if ruido
-        signal = soma_ruido(signal,1,60); % Insere ruido no sinal
+        signal = soma_ruido(signal,1,SNR); % Insere ruido no sinal
     end
     
     t_dec = data_dec(1,:);

@@ -20,14 +20,14 @@ Fasor.o DFT.o FiltroSG.o Frequencia.o FiltroIIR.o Decimacao.o
 
 struct Channel
 {
-    Fasor* fasor;
+    Fasor *fasor;
 
-    IIR* iir;
-    Decimator* decim_sinal;
-    Decimator* decim_fase;
-    Decimator* decim_mag;
-    Decimator* decim_freq;
-    Decimator* decim_rocof;
+    IIR *iir;
+    Decimator *decim_sinal;
+    Decimator *decim_fase;
+    Decimator *decim_mag;
+    Decimator *decim_freq;
+    Decimator *decim_rocof;
 
     double fase_rep, mag_rep, freq_rep;
     bool freq_pronto = false, fase_pronto = false, mag_pronto = false, rocof_pronto = false;
@@ -40,14 +40,16 @@ struct Channel
 
     int fs, nppc;
 
-    void (*processSample)(Channel* canal, double amostra);
-    void (*decimateParameters)(Channel* channel);
+    void (*processSample)(Channel *canal, double amostra);
+    void (*decimateParameters)(Channel *channel);
+    void (*resetTimestamp)(Channel *channel);
 };
 
-Channel* newChannel(int fs, bool symmetric);
+Channel *newChannel(int fs, bool symmetric);
 
-static void processSample(Channel* canal, double amostra);
-static void decimateParameters(Channel* channel);
+static void processSample(Channel *canal, double amostra);
+static void decimateParameters(Channel *channel);
 static void updateReport(Channel *canal);
+static void resetTimestamp(Channel *channel);
 
 #endif
