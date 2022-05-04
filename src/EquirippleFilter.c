@@ -6,7 +6,7 @@ Equiripple *newEquiripple(double coefficients[], int filter_size)
 
     equiripple->filter_size = filter_size;
 
-    equiripple->coefficients = (double *)calloc(coefficients, sizeof(double));
+    equiripple->coefficients = (double *)calloc(filter_size, sizeof(double));
 
     equiripple->filter_buffer = (double *)calloc(filter_size, sizeof(double));
 
