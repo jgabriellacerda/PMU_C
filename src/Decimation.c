@@ -1,4 +1,6 @@
 #include "Decimation.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 Decimator* newDecimator()
 {

@@ -1,4 +1,6 @@
 #include "DFT.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static float DFT_Gain = 0.0481717187128816;
 static float* W;

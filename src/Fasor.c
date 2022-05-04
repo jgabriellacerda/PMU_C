@@ -1,4 +1,6 @@
 #include "Fasor.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 Fasor* new_fasor(int fs, bool symmetric)
 {

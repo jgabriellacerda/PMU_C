@@ -18,6 +18,7 @@ struct Fasor
     FMM fmm_fase;
     FMM fmm_mag;
 };
+typedef struct Fasor Fasor;
 
 Fasor* new_fasor(int fs, bool symmetric);
 

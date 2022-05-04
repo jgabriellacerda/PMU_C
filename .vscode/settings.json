@@ -78,6 +78,8 @@
         "xlocale": "cpp",
         "xlocnum": "cpp",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "fasor.h": "c",
+        "decimation.h": "c"
     }
 }
