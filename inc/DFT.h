@@ -3,23 +3,26 @@
 
 #include "../parameters.h"
 #include <math.h>
+#include <stdbool.h>
 
 const float pi = 3.14159265359;
 
 struct DFT
 {
-	float re = 0, im = 0;
-	float* bufS;
-	float* bufC;
-	long ii = 0;
-	int k0 = 0;
+	float re;
+	float im;
+	float *bufS;
+	float *bufC;
+	long ii;
+	int k0;
 	int N;
 	int nppc;
 	int len;
 	bool odd;
 };
+typedef DFT DFT;
 
-DFT* new_dft(int fs);
+DFT *new_dft(int fs);
 
 static void init_DFT(int fs);
 

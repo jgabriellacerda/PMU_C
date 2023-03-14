@@ -20,34 +20,43 @@ Fasor.o DFT.o FiltroSG.o Frequencia.o FiltroIIR.o Decimacao.o
 
 struct Channel
 {
-    Fasor* fasor;
+    Fasor *fasor;
 
-    IIR* iir;
-    Decimator* decim_sinal;
-    Decimator* decim_fase;
-    Decimator* decim_mag;
-    Decimator* decim_freq;
-    Decimator* decim_rocof;
+    IIR *iir;
+    Decimator *signal_decimation;
+    Decimator *phase_decimator;
+    Decimator *mag_decimator;
+    Decimator *freq_decimator;
+    Decimator *rocof_decimator;
 
-    double fase_rep, mag_rep, freq_rep;
-    bool freq_pronto = false, fase_pronto = false, mag_pronto = false, rocof_pronto = false;
-    int timestamp = 0;
-    int frame_num = 0;
-    int second = 0;
-    bool reportar = false;
-    double rocof, rocof_mm, rocof_rep;
+    double fase_rep;
+    double mag_rep;
+    double freq_rep;
+    bool freq_pronto;
+    bool fase_pronto;
+    bool mag_pronto;
+    bool rocof_pronto;
+    int timestamp;
+    int frame_num;
+    int second;
+    bool reportar;
+    double rocof;
+    double rocof_mm;
+    double rocof_rep;
     FMM fmm_rocof;
 
-    int fs, nppc;
+    int fs;
+    int nppc;
 
-    void (*processSample)(Channel* canal, double amostra);
-    void (*decimateParameters)(Channel* channel);
+    void (*processSample)(Channel *canal, double amostra);
+    void (*decimateParameters)(Channel *channel);
 };
+typedef Channel Channel;
 
-Channel* newChannel(int fs, bool symmetric);
+Channel *newChannel(int fs, bool symmetric);
 
-static void processSample(Channel* canal, double amostra);
-static void decimateParameters(Channel* channel);
+static void processSample(Channel *canal, double amostra);
+static void decimateParameters(Channel *channel);
 static void updateReport(Channel *canal);
 
 #endif

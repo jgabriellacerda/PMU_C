@@ -3,16 +3,16 @@
 
 #include <stdlib.h>
 
-struct IIR 
+struct IIR
 {
-    double* num_IIR;
-    double* den_IIR;
+    double *num_IIR;
+    double *den_IIR;
 
     int size_num;
     int size_den;
 
-    double* buff_nIIR;
-    double* buff_dIIR;
+    double *buff_nIIR;
+    double *buff_dIIR;
 
     int k0_n;
     int k0_d;
@@ -22,8 +22,9 @@ struct IIR
 
     void (*calculaIIR)(IIR *iir, double amostra);
 };
+typedef IIR IIR;
 
-IIR* new_iir(double num[], double den[], int size_num, int size_den);
+IIR *new_iir(double num[], double den[], int size_num, int size_den);
 
 static void calculaIIR(IIR *iir, double amostra);
 

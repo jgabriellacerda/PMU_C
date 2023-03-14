@@ -18,7 +18,7 @@
 
 struct FreqMux
 {
-    float fase_ant = 0; // fase estimada anterior 
+    float fase_ant = 0; // fase estimada anterior
     int salto_fase = 0;
     double offset_SG1 = 0;
     double offset_SG2 = 0;
@@ -26,6 +26,7 @@ struct FreqMux
     int estado = NORMAL;
     int cnt = 0;
 };
+typedef FreqMux FreqMux;
 
 struct EstimacaoFrequencia
 {
@@ -35,11 +36,12 @@ struct EstimacaoFrequencia
     FMMFracionario fmmf;
     double freq_ant;
 };
+typedef EstimacaoFrequencia EstimacaoFrequencia;
 
 double estimaFrequencia(EstimacaoFrequencia *est_freq, bool estimar, double fase, double frequencia);
 void detectaSalto(FreqMux *freqmux, float fase);
 void atualizaEstado(FreqMux *freqmux);
 void atualizaUnwrapFase(FreqMux *freqmux);
-double estimaROCOF(EstimacaoFrequencia* est_freq, double freq);
+double estimaROCOF(EstimacaoFrequencia *est_freq, double freq);
 
 #endif

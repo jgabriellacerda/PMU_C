@@ -17,6 +17,7 @@ struct FMM
     double y1 = 0;
     double y0 = 0;
 };
+typedef FMM FMM;
 
 struct FMMFracionario
 {
@@ -26,8 +27,8 @@ struct FMMFracionario
     double soma_N15 = 0;
     double soma_N16 = 0;
     double soma_N17 = 0;
-
 };
+typedef FMMFracionario FMMFracionario;
 
 double calculaMediaMovel(FMM *fmm, double amostra, int N, bool unwrap);
 double calculaMMFracionario(FMMFracionario *fmmf, double amostra, double freq, int fs);

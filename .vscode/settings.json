@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.log": "ansi",
         "random": "cpp",
         "ostream": "cpp",
         "iosfwd": "cpp",
@@ -80,6 +81,13 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "fasor.h": "c",
-        "decimation.h": "c"
+        "decimation.h": "c",
+        "dft.h": "c",
+        "channel.h": "c",
+        "filtroiir.h": "c",
+        "math.h": "c",
+        "filtromediamovel.h": "c",
+        "stdbool.h": "c",
+        "frequencia.h": "c"
     }
 }
