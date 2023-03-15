@@ -9,15 +9,15 @@
 
 // Prototipos de Funcoes
 
-double get_sample(FILE* pFile);
+double get_sample(FILE *pFile);
 
-int main ()
+int main()
 {
     clock_t start, end;
 
     int fs = 960;
 
-    Channel* channel1 = newChannel(fs, false);
+    Channel *channel1 = newChannel(fs, false);
 
     double sample;
 
@@ -26,8 +26,9 @@ int main ()
     char filename[50] = "Matlab/SinaisTeste/sinal_";
     strcat(filename, sTest);
     strcat(filename, ".txt");
-    FILE* sinal_teste = fopen(filename,"r");
-    if (!sinal_teste) {
+    FILE *sinal_teste = fopen(filename, "r");
+    if (!sinal_teste)
+    {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
@@ -38,8 +39,9 @@ int main ()
 
     char fase_rep_file[60] = "Matlab/SinaisFaseMagReporte/fase_rep_";
     strcat(fase_rep_file, file_ext);
-    FILE* fase_rep = fopen(fase_rep_file,"w");
-    if (!fase_rep) {
+    FILE *fase_rep = fopen(fase_rep_file, "w");
+    if (!fase_rep)
+    {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
@@ -48,57 +50,58 @@ int main ()
 
     char mag_rep_file[60] = "Matlab/SinaisFaseMagReporte/mag_rep_";
     strcat(mag_rep_file, file_ext);
-    FILE* mag_rep = fopen(mag_rep_file,"w");
-    if (!mag_rep) {
+    FILE *mag_rep = fopen(mag_rep_file, "w");
+    if (!mag_rep)
+    {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
     char freq_rep_file[60] = "Matlab/SinaisFrequencia/freq_rep_";
     strcat(freq_rep_file, file_ext);
-    FILE* freq_rep = fopen(freq_rep_file,"w");
-    if (!freq_rep) {
+    FILE *freq_rep = fopen(freq_rep_file, "w");
+    if (!freq_rep)
+    {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
     char rocof_rep_file[60] = "Matlab/SinaisFrequencia/rocof_rep_";
     strcat(rocof_rep_file, file_ext);
-    FILE* rocof_rep = fopen(rocof_rep_file,"w");
-    if (!rocof_rep) {
+    FILE *rocof_rep = fopen(rocof_rep_file, "w");
+    if (!rocof_rep)
+    {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
 
-    
     printf("> Start\n");
 
     printf("> Open Files\n");
 
     double signal[184320];
 
-    for(int i = 0; i < 184320; i++)
+    for (int i = 0; i < 184320; i++)
     {
         signal[i] = get_sample(sinal_teste);
     }
 
     start = clock();
 
-    for(int j = 0; j < 0; j++)
+    for (int j = 0; j < 1; j++)
     {
-        for(int i = 0; i < 184320; i++)
+        for (int i = 0; i < 184320; i++)
         {
             sample = signal[i];
 
-        // while((sample = get_sample(sinal_teste)))
-        // {
-            sample = sample/(double)1000.0;
+            // while((sample = get_sample(sinal_teste)))
+            // {
+            sample = sample / (double)1000.0;
 
             channel1->processSample(channel1, sample);
-
-
-            if(channel1->reportar)
+            if (channel1->report)
             {
+                // printf("%f\n", sample);
                 fprintf(fase_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->fase_rep);
                 fprintf(mag_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->mag_rep);
                 fprintf(freq_rep, "%d;%.12lf;\n", channel1->timestamp, channel1->freq_rep);
@@ -110,7 +113,7 @@ int main ()
     end = clock();
 
     long int clocks = (end - start);
-    double time_taken = ((double)(end - start))/(double)CLOCKS_PER_SEC;
+    double time_taken = ((double)(end - start)) / (double)CLOCKS_PER_SEC;
 
     printf("Tempo = %lf\n", time_taken);
     printf("Clocks = %d\n", clocks);
@@ -212,19 +215,19 @@ int main ()
 
     // printf("Symmetric = %d\n", clocks);
 
-    long int iterations = 184320*10000;
+    long int iterations = 184320 * 1;
 
-    Channel* ch2 = newChannel(960, false);
+    Channel *ch2 = newChannel(960, false);
 
     int p = 0;
 
     start = clock();
 
-    for(long int j = 0; j < iterations; j++)
-    {   
+    for (long int j = 0; j < iterations; j++)
+    {
         sample = signal[p];
-        ch2->processSample(ch2,sample);
-        p = (p == 184320-1) ? 0 : p + 1;
+        ch2->processSample(ch2, sample);
+        p = (p == 184320 - 1) ? 0 : p + 1;
     }
 
     end = clock();
@@ -233,17 +236,17 @@ int main ()
 
     printf("Channel default = %d\n", clocks);
 
-    Channel* ch3 = newChannel(960, true);
+    Channel *ch3 = newChannel(960, true);
 
     p = 0;
 
     start = clock();
 
-    for(long int j = 0; j < iterations; j++)
-    {   
+    for (long int j = 0; j < iterations; j++)
+    {
         sample = signal[p];
-        ch3->processSample(ch3,sample);
-        p = (p == 184320-1) ? 0 : p + 1;
+        ch3->processSample(ch3, sample);
+        p = (p == 184320 - 1) ? 0 : p + 1;
     }
 
     end = clock();
@@ -251,7 +254,7 @@ int main ()
     clocks = (end - start);
 
     printf("Channel symmetric = %d\n", clocks);
-    
+
     fclose(sinal_teste);
     fclose(fase_rep);
     fclose(mag_rep);
@@ -265,16 +268,15 @@ int main ()
     return 0;
 }
 
-double get_sample(FILE* pFile)
+double get_sample(FILE *pFile)
 {
     double sample;
 
-    char *file_contents = (char*)malloc(sizeof(char)*40);
-    
+    char *file_contents = (char *)malloc(sizeof(char) * 40);
 
-    if(fscanf(pFile, "%[^\n] ", file_contents) != EOF)
+    if (fscanf(pFile, "%[^\n] ", file_contents) != EOF)
     {
-        sscanf(file_contents,"%lf", &sample);
+        sscanf(file_contents, "%lf", &sample);
         return sample;
     }
     else

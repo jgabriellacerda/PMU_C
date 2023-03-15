@@ -15,14 +15,14 @@ Channel *newChannel(int fs, bool symmetric)
     channel->freq_decimator = newDecimator();
     channel->rocof_decimator = newDecimator();
 
-    channel->freq_pronto = false;
-    channel->fase_pronto = false;
-    channel->mag_pronto = false;
-    channel->rocof_pronto = false;
+    channel->freq_ready = false;
+    channel->phase_ready = false;
+    channel->mag_ready = false;
+    channel->rocof_ready = false;
     channel->timestamp = 0;
     channel->frame_num = 0;
     channel->second = 0;
-    channel->reportar = false;
+    channel->report = false;
 
     channel->fasor = new_fasor(960, symmetric);
     channel->processSample = processSample;
@@ -52,7 +52,7 @@ static void processSample(Channel *self, double sample)
     }
     else
     {
-        self->reportar = false;
+        self->report = false;
     }
 }
 
@@ -75,52 +75,52 @@ static void decimateParameters(Channel *self)
     self->phase_decimator->downsample(self->phase_decimator, fasor->fase_mm, 2 + 8, self->nppc);
     if (self->phase_decimator->flag)
     {
-        self->fase_pronto = true;
+        self->phase_ready = true;
         self->fase_rep = self->phase_decimator->decim_sample;
     }
 
     self->mag_decimator->downsample(self->mag_decimator, fasor->mag_mm, 2 + 8, self->nppc);
     if (self->mag_decimator->flag)
     {
-        self->mag_pronto = true;
+        self->mag_ready = true;
         self->mag_rep = self->mag_decimator->decim_sample;
     }
 
     self->freq_decimator->downsample(self->freq_decimator, fasor->freq_mm, 3, self->nppc);
     if (self->freq_decimator->flag)
     {
-        self->freq_pronto = true;
+        self->freq_ready = true;
         self->freq_rep = self->freq_decimator->decim_sample;
     }
 
     self->rocof_decimator->downsample(self->rocof_decimator, self->rocof, 3 + 8, self->nppc);
     if (self->rocof_decimator->flag)
     {
-        self->rocof_pronto = true;
+        self->rocof_ready = true;
         self->rocof_rep = self->rocof_decimator->decim_sample;
     }
 }
 
 static void updateReport(Channel *self)
 {
-    if (self->fase_pronto && self->mag_pronto && self->freq_pronto && self->rocof_pronto)
+    if (self->phase_ready && self->mag_ready && self->freq_ready && self->rocof_ready)
     {
         self->frame_num = (self->phase_decimator->cnt_decim - 6) % 60;
         self->second = (self->phase_decimator->cnt_decim - 6) / 60;
         self->timestamp = self->frame_num + self->second * 60;
 
-        self->fase_pronto = false;
-        self->mag_pronto = false;
-        self->freq_pronto = false;
-        self->rocof_pronto = false;
+        self->phase_ready = false;
+        self->mag_ready = false;
+        self->freq_ready = false;
+        self->rocof_ready = false;
 
         if (self->frame_num >= 0)
         {
-            self->reportar = true;
+            self->report = true;
         }
     }
     else
     {
-        self->reportar = false;
+        self->report = false;
     }
 }

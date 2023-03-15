@@ -23,7 +23,7 @@ struct Channel
     Fasor *fasor;
 
     IIR *iir;
-    Decimator *signal_decimation;
+    Decimator *signal_decimator;
     Decimator *phase_decimator;
     Decimator *mag_decimator;
     Decimator *freq_decimator;
@@ -32,14 +32,14 @@ struct Channel
     double fase_rep;
     double mag_rep;
     double freq_rep;
-    bool freq_pronto;
-    bool fase_pronto;
-    bool mag_pronto;
-    bool rocof_pronto;
+    bool freq_ready;
+    bool phase_ready;
+    bool mag_ready;
+    bool rocof_ready;
     int timestamp;
     int frame_num;
     int second;
-    bool reportar;
+    bool report;
     double rocof;
     double rocof_mm;
     double rocof_rep;
@@ -48,15 +48,15 @@ struct Channel
     int fs;
     int nppc;
 
-    void (*processSample)(Channel *canal, double amostra);
+    void (*processSample)(Channel *channel, double sample);
     void (*decimateParameters)(Channel *channel);
 };
 typedef Channel Channel;
 
 Channel *newChannel(int fs, bool symmetric);
 
-static void processSample(Channel *canal, double amostra);
+static void processSample(Channel *channel, double sample);
 static void decimateParameters(Channel *channel);
-static void updateReport(Channel *canal);
+static void updateReport(Channel *channel);
 
 #endif
